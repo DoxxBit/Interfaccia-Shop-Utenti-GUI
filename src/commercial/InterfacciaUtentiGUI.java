@@ -2,6 +2,7 @@ package commercial;
 import java.awt.*;
 import javax.swing.*;
 import java.util.ArrayList;
+import java.util.Map;
 
 public class InterfacciaUtentiGUI extends JFrame {
 	
@@ -198,9 +199,9 @@ public class InterfacciaUtentiGUI extends JFrame {
 	    }
 	    // METODO DI SERVIZIO PER AGGIORNARE IL CARRELLO
 	    private void aggiornaAreaCarrello() {
-	        areaCarrello.setText("");
+	    		areaCarrello.setText("");
 	        Carrello carrello = utenteLoggato.getCarrello();
-	        for (Map.Entry<String, Double> entry : carrello.carrello.entrySet()) {
+	        for (Map.Entry<String, Double> entry : carrello.getProdotti().entrySet()) {
 	            String format = String.format("%.2f", entry.getValue());
 	            areaCarrello.append("- " + entry.getKey() + ": €" + format + "\n");
 	        }
