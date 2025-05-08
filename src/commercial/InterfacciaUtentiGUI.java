@@ -24,6 +24,7 @@ public class InterfacciaUtentiGUI extends JFrame {
 	        initPannelloHome();
 	        initPannelloLogin();
 	        initPannelloRegistrazione();
+	        initPannelloUtente();
 	        
 	        add(pannelloHome, "Home");
 	        add(pannelloLogin, "log-in");
@@ -64,6 +65,7 @@ public class InterfacciaUtentiGUI extends JFrame {
 	            for (Utenti utente : utentiRegistrati) {
 	                if (utente.getEmail().equalsIgnoreCase(email)) {
 	                    utenteLoggato = utente;
+	                    aggiornaAreaUtente();
 	                    layout.show(getContentPane(), "Utente");
 	                    return;
 	                }
@@ -74,7 +76,7 @@ public class InterfacciaUtentiGUI extends JFrame {
 	        pannelloLogin.add(new JLabel("Inserisci Email:"));
 	        pannelloLogin.add(loginEmailField);
 	        pannelloLogin.add(loginBtn);
-    }
+	    }
 	    
 	    // METODO DI SERVIZIO REGISTRAZIONE
 	    private void initPannelloRegistrazione() {
@@ -102,5 +104,53 @@ public class InterfacciaUtentiGUI extends JFrame {
 	        pannelloRegistrazione.add(regIndirizzoField);
 	        pannelloRegistrazione.add(new JLabel());
 	        pannelloRegistrazione.add(registraBtn);
-    }
+	    }
+	    
+	    // METODO DI SERVIZIO UTENTE
+	    private void initPannelloUtente() {
+	        pannelloUtente = new JPanel(new BorderLayout());
+	        areaUtente = new JTextArea();
+	        areaUtente.setEditable(false);
+	
+	        JPanel bottoniPanel = new JPanel(new GridLayout(1, 4));
+	        JButton visualizzaBtn = new JButton("Visualizza Dati");
+	        JButton modificaBtn = new JButton("Modifica Dati");
+	        JButton carrelloBtn = new JButton("Carrello");
+	        JButton logoutBtn = new JButton("Logout");
+	
+	        visualizzaBtn.addActionListener(e -> aggiornaAreaUtente());
+	        modificaBtn.addActionListener(e -> {
+	            String nome = JOptionPane.showInputDialog("Nuovo Full Name:");
+	            String email = JOptionPane.showInputDialog("Nuova Email:");
+	            String indirizzo = JOptionPane.showInputDialog("Nuovo Indirizzo:");
+	            utenteLoggato.setFullName(nome);
+	            utenteLoggato.setEmail(email);
+	            utenteLoggato.setIndirizzo(indirizzo);
+	            aggiornaAreaUtente();
+	        });
+	        carrelloBtn.addActionListener(e -> {
+	            layout.show(getContentPane(), "carrello");
+	        });
+	        logoutBtn.addActionListener(e -> {
+	            utenteLoggato = null;
+	            layout.show(getContentPane(), "home");
+	        });
+	
+	        bottoniPanel.add(visualizzaBtn);
+	        bottoniPanel.add(modificaBtn);
+	        bottoniPanel.add(carrelloBtn);
+	        bottoniPanel.add(logoutBtn);
+	
+	        pannelloUtente.add(new JScrollPane(areaUtente), BorderLayout.CENTER);
+	        pannelloUtente.add(bottoniPanel, BorderLayout.SOUTH);
+	    }
+	    
+	    // METODO DI SERVIZIO PER AGGIORNARE AREA UTENTI
+	    private void aggiornaAreaUtente() {
+	        if (utenteLoggato != null)
+	            areaUtente.setText(utenteLoggato.toString());
+	    }
+	    
+	    // METODO DI SERVIZIO CARRELLO
+	    
 }
