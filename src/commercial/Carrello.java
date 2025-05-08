@@ -38,4 +38,8 @@ public class Carrello {
 			String format = String.format("%.2f", tot);
 			return "\nNel tuo carrello ce un totale di\nTot: €" + format;
 		}
+		
+		public Map<String, Double> getProdotti() {
+		    return carrello;
+		}
 }
