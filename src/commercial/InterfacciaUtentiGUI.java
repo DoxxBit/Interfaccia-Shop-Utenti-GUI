@@ -20,11 +20,11 @@ public class InterfacciaUtentiGUI extends JFrame {
 	        layout = new CardLayout();
 	        setLayout(layout);
 	        
-	        // AGGIUNTA DEL METODO PRIVATO HOME
 	        initPannelloHome();
 	        initPannelloLogin();
 	        initPannelloRegistrazione();
 	        initPannelloUtente();
+	        initPannelloCarrello();
 	        
 	        add(pannelloHome, "Home");
 	        add(pannelloLogin, "log-in");
@@ -34,7 +34,7 @@ public class InterfacciaUtentiGUI extends JFrame {
 	
 	        layout.show(getContentPane(), "Home");
 	        setDefaultCloseOperation(EXIT_ON_CLOSE);
-	        setSize(200, 200);
+	        setSize(600, 400);
 	        setVisible(true);
 	    }
 	    
@@ -129,6 +129,7 @@ public class InterfacciaUtentiGUI extends JFrame {
 	            aggiornaAreaUtente();
 	        });
 	        carrelloBtn.addActionListener(e -> {
+	        		aggiornaAreaCarrello();
 	            layout.show(getContentPane(), "carrello");
 	        });
 	        logoutBtn.addActionListener(e -> {
@@ -152,5 +153,56 @@ public class InterfacciaUtentiGUI extends JFrame {
 	    }
 	    
 	    // METODO DI SERVIZIO CARRELLO
-	    
+	    private void initPannelloCarrello() {
+	        pannelloCarrello = new JPanel(new BorderLayout());
+	
+	        areaCarrello = new JTextArea();
+	        areaCarrello.setEditable(false);
+	
+	        JPanel aggiuntaPanel = new JPanel(new GridLayout(3, 2));
+	        prodNomeField = new JTextField();
+	        prodPrezzoField = new JTextField();
+	        JButton aggiungiBtn = new JButton("Aggiungi");
+	
+	        aggiungiBtn.addActionListener(e -> {
+	            try {
+	                String nome = prodNomeField.getText();
+	                double prezzo = Double.parseDouble(prodPrezzoField.getText());
+	                utenteLoggato.addProdottiCarrello(new Prodotti(nome, prezzo));
+	                aggiornaAreaCarrello();
+	            } catch (NumberFormatException ex) {
+	                JOptionPane.showMessageDialog(this, "Prezzo non valido");
+	            }
+	        });
+	
+	        aggiuntaPanel.add(new JLabel("Prodotto:"));
+	        aggiuntaPanel.add(prodNomeField);
+	        aggiuntaPanel.add(new JLabel("Prezzo:"));
+	        aggiuntaPanel.add(prodPrezzoField);
+	        aggiuntaPanel.add(new JLabel());
+	        aggiuntaPanel.add(aggiungiBtn);
+	
+	        JButton totaleBtn = new JButton("Totale Carrello");
+	        totaleBtn.addActionListener(e -> areaCarrello.append("\n" + utenteLoggato.getCarrello().totaleCarrello()));
+	
+	        JButton indietroBtn = new JButton("Indietro");
+	        indietroBtn.addActionListener(e -> layout.show(getContentPane(), "utente"));
+	
+	        JPanel bottomPanel = new JPanel();
+	        bottomPanel.add(totaleBtn);
+	        bottomPanel.add(indietroBtn);
+	
+	        pannelloCarrello.add(new JScrollPane(areaCarrello), BorderLayout.CENTER);
+	        pannelloCarrello.add(aggiuntaPanel, BorderLayout.NORTH);
+	        pannelloCarrello.add(bottomPanel, BorderLayout.SOUTH);
+	    }
+	    // METODO DI SERVIZIO PER AGGIORNARE IL CARRELLO
+	    private void aggiornaAreaCarrello() {
+	        areaCarrello.setText("");
+	        Carrello carrello = utenteLoggato.getCarrello();
+	        for (Map.Entry<String, Double> entry : carrello.carrello.entrySet()) {
+	            String format = String.format("%.2f", entry.getValue());
+	            areaCarrello.append("- " + entry.getKey() + ": €" + format + "\n");
+	        }
+	    }
 }
