@@ -20,33 +20,58 @@ public class InterfacciaUtentiGUI extends JFrame {
 	        layout = new CardLayout();
 	        setLayout(layout);
 	        
-	        // GIUNTA DEL MTODO PRIVATO HOME
+	        // AGGIUNTA DEL METODO PRIVATO HOME
 	        initPannelloHome();
 	        
-	        add(pannelloHome, "home");
+	        add(pannelloHome, "Home");
 	        add(pannelloLogin, "log-in");
 	        add(pannelloRegistrazione, "registrazione");
 	        add(pannelloUtente, "utente");
 	        add(pannelloCarrello, "carrello");
 	
-	        layout.show(getContentPane(), "home");
+	        layout.show(getContentPane(), "Home");
 	        setDefaultCloseOperation(EXIT_ON_CLOSE);
 	        setSize(200, 200);
 	        setVisible(true);
 	    }
 	    
-	    // METDO DI SERVIZIO HOME
+	    // METODO DI SERVIZIO HOME
 	    private void initPannelloHome() {
 	        pannelloHome = new JPanel();
 	        pannelloHome.setLayout(new GridLayout(2, 1));
 
 	        JButton loginButton = new JButton("Login");
-	        loginButton.addActionListener(e -> layout.show(getContentPane(), "login"));
+	        loginButton.addActionListener(e -> layout.show(getContentPane(), "Login"));
 
 	        JButton registraButton = new JButton("Registrati");
-	        registraButton.addActionListener(e -> layout.show(getContentPane(), "registrazione"));
+	        registraButton.addActionListener(e -> layout.show(getContentPane(), "Registrazione"));
 
 	        pannelloHome.add(loginButton);
 	        pannelloHome.add(registraButton);
 	    }
+	    
+	    // METODO DI SERVIZIO LOG-IN
+	    private void initPannelloLogin() {
+        pannelloLogin = new JPanel(new GridLayout(3, 1));
+
+        loginEmailField = new JTextField();
+        JButton loginBtn = new JButton("Accedi");
+
+        loginBtn.addActionListener(e -> {
+            String email = loginEmailField.getText();
+            for (Utenti utente : utentiRegistrati) {
+                if (utente.getEmail().equalsIgnoreCase(email)) {
+                    utenteLoggato = utente;
+                    
+                    layout.show(getContentPane(), "utente");
+                    return;
+                }
+            }
+            JOptionPane.showMessageDialog(this, "Email non trovata.");
+        });
+
+        pannelloLogin.add(new JLabel("Inserisci Email:"));
+        pannelloLogin.add(loginEmailField);
+        pannelloLogin.add(loginBtn);
+    }
 }
