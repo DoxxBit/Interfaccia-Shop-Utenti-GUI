@@ -22,6 +22,8 @@ public class InterfacciaUtentiGUI extends JFrame {
 	        
 	        // AGGIUNTA DEL METODO PRIVATO HOME
 	        initPannelloHome();
+	        initPannelloLogin();
+	        initPannelloRegistrazione();
 	        
 	        add(pannelloHome, "Home");
 	        add(pannelloLogin, "log-in");
@@ -52,26 +54,53 @@ public class InterfacciaUtentiGUI extends JFrame {
 	    
 	    // METODO DI SERVIZIO LOG-IN
 	    private void initPannelloLogin() {
-        pannelloLogin = new JPanel(new GridLayout(3, 1));
-
-        loginEmailField = new JTextField();
-        JButton loginBtn = new JButton("Accedi");
-
-        loginBtn.addActionListener(e -> {
-            String email = loginEmailField.getText();
-            for (Utenti utente : utentiRegistrati) {
-                if (utente.getEmail().equalsIgnoreCase(email)) {
-                    utenteLoggato = utente;
-                    
-                    layout.show(getContentPane(), "utente");
-                    return;
-                }
-            }
-            JOptionPane.showMessageDialog(this, "Email non trovata.");
-        });
-
-        pannelloLogin.add(new JLabel("Inserisci Email:"));
-        pannelloLogin.add(loginEmailField);
-        pannelloLogin.add(loginBtn);
+	        pannelloLogin = new JPanel(new GridLayout(3, 1));
+	
+	        loginEmailField = new JTextField();
+	        JButton loginBtn = new JButton("Accedi");
+	
+	        loginBtn.addActionListener(e -> {
+	            String email = loginEmailField.getText();
+	            for (Utenti utente : utentiRegistrati) {
+	                if (utente.getEmail().equalsIgnoreCase(email)) {
+	                    utenteLoggato = utente;
+	                    layout.show(getContentPane(), "Utente");
+	                    return;
+	                }
+	            }
+	            JOptionPane.showMessageDialog(this, "Email non trovata.");
+	        });
+	
+	        pannelloLogin.add(new JLabel("Inserisci Email:"));
+	        pannelloLogin.add(loginEmailField);
+	        pannelloLogin.add(loginBtn);
+    }
+	    
+	    // METODO DI SERVIZIO REGISTRAZIONE
+	    private void initPannelloRegistrazione() {
+	        pannelloRegistrazione = new JPanel(new GridLayout(4, 2));
+	        regFullNameField = new JTextField();
+	        regEmailField = new JTextField();
+	        regIndirizzoField = new JTextField();
+	        JButton registraBtn = new JButton("Registrati");
+	        registraBtn.addActionListener(e -> {
+	            Utenti nuovo = new Utenti(
+	            								regFullNameField.getText(),
+	            								regEmailField.getText(),
+	            								regIndirizzoField.getText()
+	            							);
+	            utentiRegistrati.add(nuovo);
+	            JOptionPane.showMessageDialog(this, "Registrazione completata!");
+	            layout.show(getContentPane(), "Home");
+	        });
+	
+	        pannelloRegistrazione.add(new JLabel("Full Name:"));
+	        pannelloRegistrazione.add(regFullNameField);
+	        pannelloRegistrazione.add(new JLabel("Email:"));
+	        pannelloRegistrazione.add(regEmailField);
+	        pannelloRegistrazione.add(new JLabel("Indirizzo:"));
+	        pannelloRegistrazione.add(regIndirizzoField);
+	        pannelloRegistrazione.add(new JLabel());
+	        pannelloRegistrazione.add(registraBtn);
     }
 }
