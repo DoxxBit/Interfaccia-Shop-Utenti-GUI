@@ -1,6 +1,8 @@
 package commercial;
-import java.awt.*;
+
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -17,7 +19,7 @@ public class InterfacciaUtentiGUI extends JFrame {
 	    private JTextField prodNomeField, prodPrezzoField; // VARS PER L'INSERIMENTO PRODOTTO IN VAR MAP IN CARRELLO
 	    
 	    public InterfacciaUtentiGUI() {
-	    		super("Gestione Utenti - GUI Moderna");
+	    		super("Interfaccia Utenti Shop");
 	        layout = new CardLayout();
 	        setLayout(layout);
 	        
@@ -27,13 +29,13 @@ public class InterfacciaUtentiGUI extends JFrame {
 	        initPannelloUtente();
 	        initPannelloCarrello();
 	        
-	        add(pannelloHome, "Home");
-	        add(pannelloLogin, "log-in");
+	        add(pannelloHome, "home");
+	        add(pannelloLogin, "login");
 	        add(pannelloRegistrazione, "registrazione");
 	        add(pannelloUtente, "utente");
 	        add(pannelloCarrello, "carrello");
 	
-	        layout.show(getContentPane(), "Home");
+	        layout.show(getContentPane(), "home");
 	        setDefaultCloseOperation(EXIT_ON_CLOSE);
 	        setSize(600, 400);
 	        setVisible(true);
@@ -45,10 +47,10 @@ public class InterfacciaUtentiGUI extends JFrame {
 	        pannelloHome.setLayout(new GridLayout(2, 1));
 
 	        JButton loginButton = new JButton("Login");
-	        loginButton.addActionListener(e -> layout.show(getContentPane(), "Login"));
+	        loginButton.addActionListener(e -> layout.show(getContentPane(), "login"));
 
 	        JButton registraButton = new JButton("Registrati");
-	        registraButton.addActionListener(e -> layout.show(getContentPane(), "Registrazione"));
+	        registraButton.addActionListener(e -> layout.show(getContentPane(), "registrazione"));
 
 	        pannelloHome.add(loginButton);
 	        pannelloHome.add(registraButton);
