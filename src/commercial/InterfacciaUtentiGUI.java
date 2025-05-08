@@ -28,6 +28,20 @@ public class InterfacciaUtentiGUI extends JFrame {
 	        layout.show(getContentPane(), "home");
 	        setDefaultCloseOperation(EXIT_ON_CLOSE);
 	        setSize(200, 200);
-	        setVisible(false);
+	        setVisible(true);
+	    }
+	    
+	    private void initPannelloHome() {
+	        pannelloHome = new JPanel();
+	        pannelloHome.setLayout(new GridLayout(2, 1));
+
+	        JButton loginButton = new JButton("Login");
+	        loginButton.addActionListener(e -> layout.show(getContentPane(), "login"));
+
+	        JButton registraButton = new JButton("Registrati");
+	        registraButton.addActionListener(e -> layout.show(getContentPane(), "registrazione"));
+
+	        pannelloHome.add(loginButton);
+	        pannelloHome.add(registraButton);
 	    }
 }
