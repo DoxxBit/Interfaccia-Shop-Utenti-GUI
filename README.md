@@ -1,1 +1,1 @@
-# Interfaccia-Shop-Utenti-GUI-
+# Interfaccia Shop Utenti GUI
