@@ -4,6 +4,10 @@ import java.util.Scanner;
 public class Main {
 
 	public static void main(String[] args) {
+		
+		// DEFAULT DI ISTANZA INTERFACCIA UTENTI PER FARE IL TEST
+		InterfacciaUtentiGUI interfaccia = new InterfacciaUtentiGUI();
+		
 		Scanner scanner = new Scanner(System.in);
 		ArrayList<Utenti> utentiRegistrati =new ArrayList<>();
 		// METTERE INSIEME LIST, MAP, ITERAZIONE, GENERICE.
