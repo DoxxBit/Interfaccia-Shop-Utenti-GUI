@@ -8,17 +8,21 @@ public class InterfacciaUtentiGUI extends JFrame {
 	 	private ArrayList<Utenti> utentiRegistrati = new ArrayList<>();
 	    private Utenti utenteLoggato = null;
 
-	    private JPanel pannelloHome, pannelloLogin, pannelloRegistrazione, pannelloUtente, pannelloCarrello;
+	    private JPanel pannelloHome, pannelloLogin, pannelloRegistrazione, pannelloUtente, pannelloCarrello; // VARS DEI VARI PANNEL
 	    private CardLayout layout;
-	    private JTextField loginEmailField;
-	    private JTextField regFullNameField, regEmailField, regIndirizzoField;
+	    private JTextField loginEmailField; // VARS PER IL LOG DELLE EMAIL UTENTI PRESENTI IN ARRAYLIST UTENTI
+	    private JTextField regFullNameField, regEmailField, regIndirizzoField; // VARS PER LA REGISTRAZIONE
 	    private JTextArea areaUtente, areaCarrello;
-	    private JTextField prodNomeField, prodPrezzoField;
+	    private JTextField prodNomeField, prodPrezzoField; // VARS PER L'INSERIMENTO PRODOTTO IN VAR MAP IN CARRELLO
 	    
 	    public InterfacciaUtentiGUI() {
 	    		super("Gestione Utenti - GUI Moderna");
 	        layout = new CardLayout();
 	        setLayout(layout);
+	        
+	        // GIUNTA DEL MTODO PRIVATO HOME
+	        initPannelloHome();
+	        
 	        add(pannelloHome, "home");
 	        add(pannelloLogin, "log-in");
 	        add(pannelloRegistrazione, "registrazione");
@@ -31,6 +35,7 @@ public class InterfacciaUtentiGUI extends JFrame {
 	        setVisible(true);
 	    }
 	    
+	    // METDO DI SERVIZIO HOME
 	    private void initPannelloHome() {
 	        pannelloHome = new JPanel();
 	        pannelloHome.setLayout(new GridLayout(2, 1));
