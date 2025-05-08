@@ -16,6 +16,18 @@ public class InterfacciaUtentiGUI extends JFrame {
 	    private JTextField prodNomeField, prodPrezzoField;
 	    
 	    public InterfacciaUtentiGUI() {
-	    	
+	    		super("Gestione Utenti - GUI Moderna");
+	        layout = new CardLayout();
+	        setLayout(layout);
+	        add(pannelloHome, "home");
+	        add(pannelloLogin, "log-in");
+	        add(pannelloRegistrazione, "registrazione");
+	        add(pannelloUtente, "utente");
+	        add(pannelloCarrello, "carrello");
+	
+	        layout.show(getContentPane(), "home");
+	        setDefaultCloseOperation(EXIT_ON_CLOSE);
+	        setSize(200, 200);
+	        setVisible(false);
 	    }
 }
