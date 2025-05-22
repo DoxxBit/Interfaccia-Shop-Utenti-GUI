@@ -146,15 +146,31 @@ public class InterfacciaUtentiGUI extends JFrame {
 	        JButton logoutBtn = new JButton("Logout");
 	
 	        visualizzaBtn.addActionListener(e -> aggiornaAreaUtente());
+	        // QUERY PER UPDATE PER MODIFICA UTENTE 
 	        modificaBtn.addActionListener(e -> {
 	            String nome = JOptionPane.showInputDialog("Nuovo Full Name:");
 	            String email = JOptionPane.showInputDialog("Nuova Email:");
 	            String indirizzo = JOptionPane.showInputDialog("Nuovo Indirizzo:");
-	            utenteLoggato.setFullName(nome);
-	            utenteLoggato.setEmail(email);
-	            utenteLoggato.setIndirizzo(indirizzo);
-	            aggiornaAreaUtente();
+
+	            try (Connection conn = DBconn.getConnection()) {
+	                String sql = "UPDATE utenti SET full_name = ?, email = ?, indirizzo = ? WHERE email = ?";
+	                try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+	                    stmt.setString(1, nome);
+	                    stmt.setString(2, email);
+	                    stmt.setString(3, indirizzo);
+	                    stmt.setString(4, utenteLoggato.getEmail());
+	                    stmt.executeUpdate();
+
+	                    utenteLoggato.setFullName(nome);
+	                    utenteLoggato.setEmail(email);
+	                    utenteLoggato.setIndirizzo(indirizzo);
+	                    aggiornaAreaUtente();
+	                }
+	            } catch (SQLException ex) {
+	                JOptionPane.showMessageDialog(this, "Errore durante aggiornamento: " + ex.getMessage());
+	            }
 	        });
+
 	        carrelloBtn.addActionListener(e -> {
 	        		aggiornaAreaCarrello();
 	            layout.show(getContentPane(), "carrello");
