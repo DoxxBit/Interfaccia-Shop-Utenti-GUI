@@ -302,13 +302,37 @@ public class InterfacciaUtentiGUI extends JFrame {
 	    }
 	    // METODO DI SERVIZIO PER AGGIORNARE IL CARRELLO
 	    private void aggiornaAreaCarrello() {
-	    		areaCarrello.setText("");
-	        Carrello carrello = utenteLoggato.getCarrello();
-	        for (Map.Entry<String, Double> entry : carrello.getProdotti().entrySet()) {
-	            String format = String.format("%.2f", entry.getValue());
-	            areaCarrello.append("- " + entry.getKey() + ": €" + format + "\n");
+	        areaCarrello.setText("");
+
+	        try (Connection conn = DBconn.getConnection()) {
+	            String query = """
+	                SELECT p.nome, p.prezzo FROM carrello_prodotti cp
+	                JOIN carrelli c ON cp.carrello_id = c.id
+	                JOIN prodotti p ON cp.prodotto_id = p.id
+	                WHERE c.utente_email = ?
+	            """;
+
+	            try (PreparedStatement ps = conn.prepareStatement(query)) {
+	                ps.setString(1, utenteLoggato.getEmail());
+	                ResultSet rs = ps.executeQuery();
+
+	                double totale = 0;
+	                while (rs.next()) {
+	                    String nome = rs.getString("nome");
+	                    double prezzo = rs.getDouble("prezzo");
+	                    totale += prezzo;
+	                    areaCarrello.append("- " + nome + ": €" + String.format("%.2f", prezzo) + "\n");
+	                }
+
+	                areaCarrello.append("\nTotale: €" + String.format("%.2f", totale));
+	            }
+
+	        } catch (SQLException ex) {
+	            ex.printStackTrace();
+	            areaCarrello.setText("Errore durante caricamento carrello.");
 	        }
 	    }
+
 	    
 	    
 
