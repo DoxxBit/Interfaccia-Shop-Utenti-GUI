@@ -65,16 +65,29 @@ public class InterfacciaUtentiGUI extends JFrame {
 	
 	        loginBtn.addActionListener(e -> {
 	            String email = loginEmailField.getText();
-	            for (Utenti utente : utentiRegistrati) {
-	                if (utente.getEmail().equalsIgnoreCase(email)) {
-	                    utenteLoggato = utente;
-	                    aggiornaAreaUtente();
-	                    layout.show(getContentPane(), "Utente");
-	                    return;
+	            try (Connection conn = DBconn.getConnection()) {
+	                String sql = "SELECT * FROM utenti WHERE email = ?";
+	                try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+	                    stmt.setString(1, email);
+	                    try (ResultSet rs = stmt.executeQuery()) {
+	                        if (rs.next()) {
+	                            utenteLoggato = new Utenti(
+	                                rs.getString("full_name"),
+	                                rs.getString("email"),
+	                                rs.getString("indirizzo")
+	                            );
+	                            aggiornaAreaUtente();
+	                            layout.show(getContentPane(), "utente");
+	                        } else {
+	                            JOptionPane.showMessageDialog(this, "Email non trovata.");
+	                        }
+	                    }
 	                }
+	            } catch (SQLException ex) {
+	                JOptionPane.showMessageDialog(this, "Errore durante il login: " + ex.getMessage());
 	            }
-	            JOptionPane.showMessageDialog(this, "Email non trovata.");
 	        });
+
 	
 	        pannelloLogin.add(new JLabel("Inserisci Email:"));
 	        pannelloLogin.add(loginEmailField);
