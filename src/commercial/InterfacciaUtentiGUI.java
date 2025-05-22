@@ -208,15 +208,76 @@ public class InterfacciaUtentiGUI extends JFrame {
 	        JButton aggiungiBtn = new JButton("Aggiungi");
 	
 	        aggiungiBtn.addActionListener(e -> {
+	            String nome = prodNomeField.getText();
+	            double prezzo;
+
 	            try {
-	                String nome = prodNomeField.getText();
-	                double prezzo = Double.parseDouble(prodPrezzoField.getText());
-	                utenteLoggato.addProdottiCarrello(new Prodotti(nome, prezzo));
-	                aggiornaAreaCarrello();
+	                prezzo = Double.parseDouble(prodPrezzoField.getText());
 	            } catch (NumberFormatException ex) {
 	                JOptionPane.showMessageDialog(this, "Prezzo non valido");
+	                return;
+	            }
+
+	            try (Connection conn = DBconn.getConnection()) {
+	                conn.setAutoCommit(false);
+
+	                /* SET OR IL GET ID DEL PRODOTTO */
+	                int prodottoId;
+	                try (PreparedStatement ps = conn.prepareStatement(
+	                        "INSERT INTO prodotti (nome, prezzo) VALUES (?, ?) ON CONFLICT DO NOTHING RETURNING id", 
+	                        Statement.RETURN_GENERATED_KEYS)) {
+	                    ps.setString(1, nome);
+	                    ps.setDouble(2, prezzo);
+	                    ps.executeUpdate();
+	                    ResultSet rs = ps.getGeneratedKeys();
+	                    if (rs.next()) {
+	                        prodottoId = rs.getInt(1);
+	                    } else {
+	                        try (PreparedStatement ps2 = conn.prepareStatement("SELECT id FROM prodotti WHERE nome = ?")) {
+	                            ps2.setString(1, nome);
+	                            ResultSet rs2 = ps2.executeQuery();
+	                            rs2.next();
+	                            prodottoId = rs2.getInt("id");
+	                        }
+	                    }
+	                }
+
+	                /* VERIFICA O CREAZIONE DEL CARRELLO UTENTE */
+	                int carrelloId;
+	                try (PreparedStatement ps = conn.prepareStatement(
+	                        "SELECT id FROM carrelli WHERE utente_email = ?")) {
+	                    ps.setString(1, utenteLoggato.getEmail());
+	                    ResultSet rs = ps.executeQuery();
+	                    if (rs.next()) {
+	                        carrelloId = rs.getInt("id");
+	                    } else {
+	                        try (PreparedStatement ps2 = conn.prepareStatement(
+	                                "INSERT INTO carrelli (utente_email) VALUES (?) RETURNING id")) {
+	                            ps2.setString(1, utenteLoggato.getEmail());
+	                            ResultSet rs2 = ps2.executeQuery();
+	                            rs2.next();
+	                            carrelloId = rs2.getInt("id");
+	                        }
+	                    }
+	                }
+
+	                /* COLEGAMENTO DEL PRODOTTO AL  CARELLO */
+	                try (PreparedStatement ps = conn.prepareStatement(
+	                        "INSERT INTO carrello_prodotti (carrello_id, prodotto_id) VALUES (?, ?) ON CONFLICT DO NOTHING")) {
+	                    ps.setInt(1, carrelloId);
+	                    ps.setInt(2, prodottoId);
+	                    ps.executeUpdate();
+	                }
+
+	                conn.commit();
+	                aggiornaAreaCarrello();
+
+	            } catch (SQLException ex) {
+	                ex.printStackTrace();
+	                JOptionPane.showMessageDialog(this, "Errore durante inserimento prodotto nel carrello: " + ex.getMessage());
 	            }
 	        });
+
 	
 	        aggiuntaPanel.add(new JLabel("Prodotto:"));
 	        aggiuntaPanel.add(prodNomeField);
