@@ -8,8 +8,8 @@ public class Main {
 		// DEFAULT DI ISTANZA INTERFACCIA UTENTI PER FARE IL TEST
 		InterfacciaUtentiGUI interfaccia = new InterfacciaUtentiGUI();
 		
-		Scanner scanner = new Scanner(System.in);
-		ArrayList<Utenti> utentiRegistrati =new ArrayList<>();
+		/* Scanner scanner = new Scanner(System.in);
+		ArrayList<Utenti> utentiRegistrati =new ArrayList<>();*/
 		// METTERE INSIEME LIST, MAP, ITERAZIONE, GENERICE.
 		/* STRUTTURA: 
 		 * HASHMAP<STRING, DOUBLE> DOVE -> CHIAVE = NOME PRODOTTO, VALORE = PREZZO
@@ -24,7 +24,7 @@ public class Main {
 		 * E  DOVE INSERIRE TUTTI I CAMPI FILE.TEXT export on SQL */
 		
 		//UTENTE DI DEAFULT
-		Utenti utente = new Utenti("Paperino Rossi", "paperino@gmail.com", "Via Papero, n5");
+		/* Utenti utente = new Utenti("Paperino Rossi", "paperino@gmail.com", "Via Papero, n5");
 		utente.addProdottiCarrello(new Prodotti("Laptop", 1220.99), new Prodotti("Mouse", 25.50));
 		utentiRegistrati.add(utente);
 		
@@ -146,7 +146,7 @@ public class Main {
 			}
 		}while(statoMenu);
 		
-		scanner.close();
+		scanner.close();*/
 	}
 
 }

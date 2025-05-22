@@ -1,5 +1,5 @@
 package commercial;
-
+import java.sql.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -37,7 +37,7 @@ public class InterfacciaUtentiGUI extends JFrame {
 	
 	        layout.show(getContentPane(), "home");
 	        setDefaultCloseOperation(EXIT_ON_CLOSE);
-	        setSize(600, 400);
+	        setSize(Constants.sizeWidth, Constants.sizeHeight);
 	        setVisible(true);
 	    }
 	    
@@ -88,16 +88,27 @@ public class InterfacciaUtentiGUI extends JFrame {
 	        regEmailField = new JTextField();
 	        regIndirizzoField = new JTextField();
 	        JButton registraBtn = new JButton("Registrati");
+	        
 	        registraBtn.addActionListener(e -> {
-	            Utenti nuovo = new Utenti(
-	            								regFullNameField.getText(),
-	            								regEmailField.getText(),
-	            								regIndirizzoField.getText()
-	            							);
-	            utentiRegistrati.add(nuovo);
-	            JOptionPane.showMessageDialog(this, "Registrazione completata!");
-	            layout.show(getContentPane(), "Home");
+	            String fullName = regFullNameField.getText();
+	            String email = regEmailField.getText();
+	            String indirizzo = regIndirizzoField.getText();
+
+	            try (Connection conn = DBconn.getConnection()) {
+	                String sql = "INSERT INTO utenti (full_name, email, indirizzo) VALUES (?, ?, ?)";
+	                try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+	                    stmt.setString(1, fullName);
+	                    stmt.setString(2, email);
+	                    stmt.setString(3, indirizzo);
+	                    stmt.executeUpdate();
+	                }
+	                JOptionPane.showMessageDialog(this, "Registrazione completata!");
+	                layout.show(getContentPane(), "home");
+	            } catch (SQLException ex) {
+	                JOptionPane.showMessageDialog(this, "Errore durante la registrazione: " + ex.getMessage());
+	            }
 	        });
+
 	
 	        pannelloRegistrazione.add(new JLabel("Full Name:"));
 	        pannelloRegistrazione.add(regFullNameField);
@@ -208,4 +219,7 @@ public class InterfacciaUtentiGUI extends JFrame {
 	            areaCarrello.append("- " + entry.getKey() + ": €" + format + "\n");
 	        }
 	    }
+	    
+	    
+
 }
